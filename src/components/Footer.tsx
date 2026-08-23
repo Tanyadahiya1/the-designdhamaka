@@ -136,7 +136,7 @@ export default function Footer() {
           <span className="mono text-[10px] uppercase text-ink/30">Connect</span>
           <div className="flex flex-col gap-2.5 mt-4">
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/the.designdhamaka/"
               target="_blank"
               rel="noreferrer"
               className="group flex items-center gap-1 text-sm text-ink/60 hover:text-ink transition-colors w-fit"
@@ -145,7 +145,7 @@ export default function Footer() {
               <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/company/the-designdhamaka"
               target="_blank"
               rel="noreferrer"
               className="group flex items-center gap-1 text-sm text-ink/60 hover:text-ink transition-colors w-fit"
@@ -198,10 +198,10 @@ export default function Footer() {
         <div className="flex items-center gap-5">
           <span>Delhi, India</span>
           <div className="flex items-center gap-3">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-ink transition-colors">
+            <a href="https://www.instagram.com/the.designdhamaka/" target="_blank" rel="noreferrer" className="hover:text-ink transition-colors">
               <Instagram size={14} />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-ink transition-colors">
+            <a href="https://www.linkedin.com/company/the-designdhamaka" target="_blank" rel="noreferrer" className="hover:text-ink transition-colors">
               <Linkedin size={14} />
             </a>
             <a href="mailto:the.designdhamaka@gmail.com" className="hover:text-ink transition-colors">
