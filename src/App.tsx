@@ -20,14 +20,7 @@ export default function App() {
       <div className="grain" />
       <CustomCursor />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <SmoothScroll>
-              <Home />
-            </SmoothScroll>
-          }
-        />
+        <Route path="/" element={<Home />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
         <Route path="/portfolio/:id" element={<ProjectDetail />} />
