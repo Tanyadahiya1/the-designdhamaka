@@ -148,15 +148,24 @@ function Lights() {
 }
 
 export default function Scene3D() {
-  const [count, setCount] = useState(140)
+  const [count, setCount] = useState(80)
 
   useEffect(() => {
-    setCount(window.innerWidth < 768 ? 45 : 140)
-  }, [])
+  const updateParticleCount = () => {
+    setCount(window.innerWidth < 768 ? 35 : 140)
+  }
+
+  updateParticleCount()
+  window.addEventListener('resize', updateParticleCount)
+
+  return () => {
+    window.removeEventListener('resize', updateParticleCount)
+  }
+}, [])
 
   return (
     <Canvas
-      dpr={[1, 2]}
+      dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: [0, 0, 6.5], fov: 40 }}
       style={{ position: 'absolute', inset: 0 }}
