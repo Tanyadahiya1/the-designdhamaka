@@ -26,14 +26,11 @@ export default function AdminSocial() {
       setLoading(false)
       return
     }
-
     setLoading(true)
-
     const { data } = await supabase
       .from('social_posts')
       .select('*')
       .order('sort_order', { ascending: true })
-
     setPosts((data as SocialPost[]) || [])
     setLoading(false)
   }
@@ -42,73 +39,43 @@ export default function AdminSocial() {
     loadPosts()
   }, [])
 
-  function updateForm(
-    key: keyof typeof emptyForm,
-    value: string | boolean
-  ) {
-    setForm((current) => ({
-      ...current,
-      [key]: value,
-    }))
+  function updateForm(key: keyof typeof emptyForm, value: string | boolean) {
+    setForm((current) => ({ ...current, [key]: value }))
   }
 
-  async function uploadImage(
-    event: ChangeEvent<HTMLInputElement>,
-    field: ImageField
-  ) {
+  async function uploadImage(event: ChangeEvent<HTMLInputElement>, field: ImageField) {
     const file = event.target.files?.[0]
-
     if (!file || !supabase) return
-
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file.')
       return
     }
-
     setUploading(field)
-
     const extension = file.name.split('.').pop() || 'jpg'
-    const fileName = `${Date.now()}-${Math.random()
-      .toString(36)
-      .slice(2)}.${extension}`
-
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`
     const filePath = `social-posts/${fileName}`
-
     const { error: uploadError } = await supabase.storage
       .from('social-media')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false,
-      })
-
+      .upload(filePath, file, { cacheControl: '3600', upsert: false })
     if (uploadError) {
       alert(`Image upload failed: ${uploadError.message}`)
       setUploading(null)
       return
     }
-
-    const { data } = supabase.storage
-      .from('social-media')
-      .getPublicUrl(filePath)
-
+    const { data } = supabase.storage.from('social-media').getPublicUrl(filePath)
     updateForm(field, data.publicUrl)
     setUploading(null)
-
     event.target.value = ''
   }
 
   async function handleAdd(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-
     if (!supabase) return
-
     if (!form.before_image || !form.after_image) {
       alert('Please upload both Before and After images.')
       return
     }
-
     setSaving(true)
-
     const { data, error } = await supabase
       .from('social_posts')
       .insert({
@@ -121,14 +88,11 @@ export default function AdminSocial() {
       })
       .select()
       .single()
-
     setSaving(false)
-
     if (error) {
       alert(`Could not save post: ${error.message}`)
       return
     }
-
     if (data) {
       setPosts((current) => [...current, data as SocialPost])
       setForm(emptyForm)
@@ -138,33 +102,16 @@ export default function AdminSocial() {
 
   async function togglePublished(post: SocialPost) {
     if (!supabase) return
-
-    await supabase
-      .from('social_posts')
-      .update({ published: !post.published })
-      .eq('id', post.id)
-
+    await supabase.from('social_posts').update({ published: !post.published }).eq('id', post.id)
     setPosts((current) =>
-      current.map((item) =>
-        item.id === post.id
-          ? { ...item, published: !item.published }
-          : item
-      )
+      current.map((item) => (item.id === post.id ? { ...item, published: !item.published } : item))
     )
   }
 
   async function removePost(id: string) {
     if (!supabase) return
-
-    const shouldDelete = window.confirm('Delete this social media post?')
-
-    if (!shouldDelete) return
-
-    await supabase
-      .from('social_posts')
-      .delete()
-      .eq('id', id)
-
+    if (!window.confirm('Delete this social media post?')) return
+    await supabase.from('social_posts').delete().eq('id', id)
     setPosts((current) => current.filter((post) => post.id !== id))
   }
 
@@ -189,21 +136,13 @@ export default function AdminSocial() {
       </button>
 
       {showForm && (
-        <form
-          onSubmit={handleAdd}
-          className="glass mb-8 space-y-5 rounded-xl p-6"
-        >
+        <form onSubmit={handleAdd} className="glass mb-8 space-y-5 rounded-xl p-6">
           <div>
-            <label className="mono text-[10px] uppercase text-ink/40">
-              Business Name *
-            </label>
-
+            <label className="mono text-[10px] uppercase text-ink/40">Business Name *</label>
             <input
               required
               value={form.business_name}
-              onChange={(event) =>
-                updateForm('business_name', event.target.value)
-              }
+              onChange={(event) => updateForm('business_name', event.target.value)}
               placeholder="Example: Spice Route Cafe"
               className="mt-1.5 w-full border-b border-ink/20 bg-transparent py-2 text-sm outline-none focus:border-accent"
             />
@@ -211,82 +150,53 @@ export default function AdminSocial() {
 
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
-              <label className="mono text-[10px] uppercase text-ink/40">
-                Before Image *
-              </label>
-
+              <label className="mono text-[10px] uppercase text-ink/40">Before Image *</label>
               <input
-                required
                 type="file"
                 accept="image/*"
-                onChange={(event) =>
-                  uploadImage(event, 'before_image')
-                }
+                onChange={(event) => uploadImage(event, 'before_image')}
                 disabled={uploading !== null}
                 className="mt-2 block w-full text-sm text-ink/60 file:mr-3 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-xs file:font-semibold file:text-bg"
               />
-
               {uploading === 'before_image' && (
                 <p className="mt-2 flex items-center gap-2 text-xs text-ink/50">
                   <Loader2 size={13} className="animate-spin" />
                   Uploading before image...
                 </p>
               )}
-
               {form.before_image && (
-                <img
-                  src={form.before_image}
-                  alt="Before preview"
-                  className="mt-3 h-32 w-full rounded-lg object-cover"
-                />
+                <img src={form.before_image} alt="Before preview" className="mt-3 h-32 w-full rounded-lg object-cover" />
               )}
             </div>
 
             <div>
-              <label className="mono text-[10px] uppercase text-ink/40">
-                After Image *
-              </label>
-
+              <label className="mono text-[10px] uppercase text-ink/40">After Image *</label>
               <input
-                required
                 type="file"
                 accept="image/*"
-                onChange={(event) =>
-                  uploadImage(event, 'after_image')
-                }
+                onChange={(event) => uploadImage(event, 'after_image')}
                 disabled={uploading !== null}
                 className="mt-2 block w-full text-sm text-ink/60 file:mr-3 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-xs file:font-semibold file:text-bg"
               />
-
               {uploading === 'after_image' && (
                 <p className="mt-2 flex items-center gap-2 text-xs text-ink/50">
                   <Loader2 size={13} className="animate-spin" />
                   Uploading after image...
                 </p>
               )}
-
               {form.after_image && (
-                <img
-                  src={form.after_image}
-                  alt="After preview"
-                  className="mt-3 h-32 w-full rounded-lg object-cover"
-                />
+                <img src={form.after_image} alt="After preview" className="mt-3 h-32 w-full rounded-lg object-cover" />
               )}
             </div>
           </div>
 
           <div>
-            <label className="mono text-[10px] uppercase text-ink/40">
-              Caption *
-            </label>
-
+            <label className="mono text-[10px] uppercase text-ink/40">Caption *</label>
             <textarea
               required
               rows={3}
               value={form.caption}
-              onChange={(event) =>
-                updateForm('caption', event.target.value)
-              }
+              onChange={(event) => updateForm('caption', event.target.value)}
               placeholder="Explain the result..."
               className="mt-1.5 w-full resize-none border-b border-ink/20 bg-transparent py-2 text-sm outline-none focus:border-accent"
             />
@@ -296,9 +206,7 @@ export default function AdminSocial() {
             <input
               type="checkbox"
               checked={form.published}
-              onChange={(event) =>
-                updateForm('published', event.target.checked)
-              }
+              onChange={(event) => updateForm('published', event.target.checked)}
             />
             Publish on website
           </label>
@@ -321,33 +229,14 @@ export default function AdminSocial() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <div
-              key={post.id}
-              className="glass overflow-hidden rounded-xl"
-            >
+            <div key={post.id} className="glass overflow-hidden rounded-xl">
               <div className="grid aspect-video grid-cols-2">
-                <img
-                  src={post.before_image}
-                  alt="Before"
-                  className="h-full w-full object-cover"
-                />
-
-                <img
-                  src={post.after_image}
-                  alt="After"
-                  className="h-full w-full object-cover"
-                />
+                <img src={post.before_image} alt="Before" className="h-full w-full object-cover" />
+                <img src={post.after_image} alt="After" className="h-full w-full object-cover" />
               </div>
-
               <div className="p-4">
-                <h3 className="font-medium">
-                  {post.business_name}
-                </h3>
-
-                <p className="mt-1 text-xs text-ink/50">
-                  {post.caption}
-                </p>
-
+                <h3 className="font-medium">{post.business_name}</h3>
+                <p className="mt-1 text-xs text-ink/50">{post.caption}</p>
                 <div className="mt-3 flex items-center justify-between">
                   <label className="flex items-center gap-2 text-xs text-ink/50">
                     <input
@@ -357,12 +246,7 @@ export default function AdminSocial() {
                     />
                     Published
                   </label>
-
-                  <button
-                    type="button"
-                    onClick={() => removePost(post.id)}
-                    className="text-ink/40 hover:text-red-500"
-                  >
+                  <button type="button" onClick={() => removePost(post.id)} className="text-ink/40 hover:text-red-500">
                     <Trash2 size={16} />
                   </button>
                 </div>
