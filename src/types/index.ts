@@ -27,3 +27,13 @@ export interface Project {
   sort_order: number
   gallery?: GalleryItem[]
 }
+export interface SocialPost {
+  id: string
+  created_at: string
+  business_name: string
+  before_image: string
+  after_image: string
+  caption: string
+  sort_order: number
+  published: boolean
+}

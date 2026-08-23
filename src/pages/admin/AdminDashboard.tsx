@@ -3,8 +3,9 @@ import { Asterisk, LogOut } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import AdminInquiries from './AdminInquiries'
 import AdminProjects from './AdminProjects'
+import AdminSocial from './AdminSocial'
 
-type Tab = 'inquiries' | 'projects'
+type Tab = 'inquiries' | 'projects' | 'social'
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState<Tab>('inquiries')
@@ -28,7 +29,7 @@ export default function AdminDashboard() {
 
       <div className="px-5 sm:px-8 md:px-12 py-10 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 mb-8">
-          {(['inquiries', 'projects'] as Tab[]).map((t) => (
+          {(['inquiries', 'projects' , 'social'] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -36,12 +37,12 @@ export default function AdminDashboard() {
                 tab === t ? 'bg-ink text-bg' : 'glass text-ink/60 hover:text-ink'
               }`}
             >
-              {t === 'inquiries' ? 'Client Enquiries' : 'Portfolio Work'}
+              {t === 'inquiries' ? 'Client Enquiries' : t === 'projects' ? 'Portfolio Work' : 'Social Media'}
             </button>
           ))}
         </div>
 
-        {tab === 'inquiries' ? <AdminInquiries /> : <AdminProjects />}
+        {tab === 'inquiries' ? <AdminInquiries /> : tab === 'projects' ? <AdminProjects /> : <AdminSocial />}
       </div>
     </div>
   )
