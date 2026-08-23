@@ -194,7 +194,7 @@ export default function Footer() {
       </div>
 
       <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 mono text-[10px] uppercase text-ink/30">
-        <span>© 2026 The Design Dhamaka. All rights reserved. Made with intent.</span>
+        <span>© 2026 The Design Dhamaka. All rights reserved.</span>
         <div className="flex items-center gap-5">
           <span>Delhi, India</span>
           <div className="flex items-center gap-3">
