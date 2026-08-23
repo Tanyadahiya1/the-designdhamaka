@@ -140,7 +140,7 @@ export default function AdminSocial() {
           <div>
             <label className="mono text-[10px] uppercase text-ink/40">Business Name *</label>
             <input
-              required
+              
               value={form.business_name}
               onChange={(event) => updateForm('business_name', event.target.value)}
               placeholder="Example: Spice Route Cafe"
@@ -193,7 +193,7 @@ export default function AdminSocial() {
           <div>
             <label className="mono text-[10px] uppercase text-ink/40">Caption *</label>
             <textarea
-              required
+              
               rows={3}
               value={form.caption}
               onChange={(event) => updateForm('caption', event.target.value)}
